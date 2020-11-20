@@ -1,7 +1,6 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <div id="nav" class="nav justify-content-center">
+    <router-link to="/" class="nav-link">Home</router-link>
   </div>
   <router-view />
 </template>
