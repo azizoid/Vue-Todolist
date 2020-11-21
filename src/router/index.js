@@ -7,6 +7,11 @@ const routes = [
     name: "Todo List",
     component: Todos,
   },
+  {
+    path: "/login",
+    name: "Login Page",
+    component: () => import("../views/Login.vue"),
+  },
   // {
   //   path: "/about",
   //   name: "About",

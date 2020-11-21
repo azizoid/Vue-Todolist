@@ -10,19 +10,14 @@
 <script>
 export default {
   name: "AddItem",
-  props: {
-    onAddHandle: Function,
-  },
   data() {
     return {
       newTodoItem: "",
     };
   },
   methods: {
-    addNewTodoItem: function() {
-      if (this.newTodoItem.length > 3) {
-        this.onAddHandle(this.newTodoItem);
-      }
+    addNewTodoItem() {
+        this.$store.dispatch('todos/addTodoItem', {title: this.newTodoItem})
     },
   },
 };
