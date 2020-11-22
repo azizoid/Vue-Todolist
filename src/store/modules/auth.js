@@ -10,8 +10,13 @@ export default {
     },
   },
   actions: {
-    loginHandler(context) {
-      context.commit("auth", { isLoggedIn: true, token: Math.random() });
+    async loginHandler(context) {
+      await fetch("https://quran.az/api/2/225")
+        .then((result) => result.json())
+        .then((data) =>
+          context.commit("auth", { isLoggedIn: true, token: data.out[0].c })
+        )
+        .catch((error) => console.log(error));
     },
     logoutHandler(context) {
       context.commit("auth", { isLoggedIn: false, token: "" });

@@ -2,50 +2,38 @@ export default {
   namespaced: true,
   state: {
     showMessage: "",
-    todos: [
-      {
-        id: 1,
-        title: "To buy Bread",
-        checked: false,
-      },
-      {
-        id: 2,
-        title: "To buy Milk",
-        checked: true,
-      },
-      {
-        id: 3,
-        title: "To buy Onions",
-        checked: false,
-      },
-    ],
+    todos: [],
   },
   mutations: {
+    getTodoList: function(state, payload) {
+      state.todos = payload.todos;
+    },
     showErrorMessage: function(state, payload) {
       state.showMessage = payload.message;
       setTimeout(() => (state.showMessage = ""), 1000);
     },
-    deleteTodoItem: function(state, payload) {
-      state.todos = state.todos.filter(
-        (todo) => todo.id !== payload.todoItemId
-      );
-    },
     addTodoItem: function(state, payload) {
-      const todoTitle = payload.title;
-      state.todos.unshift({
-        id: Math.random(),
-        title: todoTitle,
-        checked: false,
-      });
+      state.todos.unshift(payload);
     },
     changeTodoitem: function(state, payload) {
       state.todos = state.todos.map((item) => {
-        if (item.id === payload.todoItemId) item.checked = !item.checked;
+        if (item._id === payload.todoItemId) {
+          item.checked = payload.checked;
+        }
         return item;
       });
     },
+    deleteTodoItem: function(state, payload) {
+      console.log("mutation");
+      state.todos = state.todos.filter(
+        (todo) => todo._id !== payload.todoItemId
+      );
+    },
   },
   actions: {
+    getTodoList: function(context, payload) {
+      context.commit("getTodoList", payload);
+    },
     showErrorMessage(context, payload) {
       context.commit("showErrorMessage", payload);
     },

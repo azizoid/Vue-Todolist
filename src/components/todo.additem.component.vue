@@ -17,7 +17,25 @@ export default {
   },
   methods: {
     addNewTodoItem() {
-        this.$store.dispatch('todos/addTodoItem', {title: this.newTodoItem})
+
+      const saveTodoData = {
+        title: this.newTodoItem,
+        checked: false
+      }
+
+      fetch("http://localhost:3000/api/todos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(saveTodoData),
+      }).then((result)=>result.json())
+      .then((data) => {
+        console.log(data)
+        this.$store.dispatch('todos/addTodoItem', data);
+        this.newTodoItem = "";
+      }).catch((error) => console.log(error));
+        
     },
   },
 };
