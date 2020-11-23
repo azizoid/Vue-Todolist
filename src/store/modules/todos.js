@@ -52,8 +52,8 @@ export default {
     },
     todos(state) {
       return state.todos.sort((a, b) => {
-        const titleA = a.title.toUpperCase();
-        const titleB = b.title.toUpperCase();
+        const titleA = a.checked;
+        const titleB = b.checked;
 
         if (titleA < titleB) return -1;
         if (titleA > titleB) return 1;
