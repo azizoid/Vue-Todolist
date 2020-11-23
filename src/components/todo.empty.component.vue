@@ -3,9 +3,3 @@
     <p>Todo list is empty</p>
   </li>
 </template>
-
-<script>
-export default {
-  name: "TodoEmpty",
-};
-</script>

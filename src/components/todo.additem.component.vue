@@ -23,18 +23,28 @@ export default {
         checked: false
       }
 
-      fetch("http://localhost:3000/api/todos", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(saveTodoData),
-      }).then((result)=>result.json())
-      .then((data) => {
-        console.log(data)
-        this.$store.dispatch('todos/addTodoItem', data);
-        this.newTodoItem = "";
-      }).catch((error) => console.log(error));
+      const checkItem = this.$store.getters["todos/todos"].find(
+        (item) => item.title === saveTodoData.title
+      );
+      if (!checkItem) {
+        fetch(`${process.env.VUE_APP_API_URL}/todos/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            'Cache-Control': 'no-cache'
+          },
+          body: JSON.stringify(saveTodoData),
+        }).then((result)=>result.json())
+        .then((data) => {
+          this.$store.dispatch('todos/addTodoItem', data);
+          this.newTodoItem = "";
+        }).catch((error) => console.log(error));
+      }
+      else {
+        this.$store.dispatch("todos/showErrorMessage", {
+          message: "You already have this item in your list",
+        });
+      }
         
     },
   },

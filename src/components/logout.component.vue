@@ -1,6 +1,12 @@
 <template>
-  <span>{{token}}</span>
-  <button type="button" @click="logoutHandler">Logout</button>
+  <div class="col-3">
+    <span>{{token}}</span>
+    <button 
+      type="button" 
+      class="form-control btn btn-outline-danger" 
+      @click="logoutHandler"
+    >Logout</button>
+  </div>
 </template>
 
 <script>

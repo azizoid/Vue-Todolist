@@ -1,6 +1,6 @@
 <template>
   <div class="todos">
-    <ul class="list-group list-group-flush">
+    <div class="list-group list-group-flush">
       <div v-show="showMessage.length" class="alert alert-danger">{{showMessage}}</div>
       <Loader v-show="loader" />
       <TodoEmpty v-if="!todos.length" />
@@ -11,7 +11,7 @@
         :todo="todo"
       />
       <AddItem />
-    </ul>
+    </div>
   </div>
 </template>
 
@@ -39,7 +39,12 @@ export default {
     }
   },
   mounted() {
-      fetch("http://localhost:3000/api/todos")
+      fetch(`${process.env.VUE_APP_API_URL}/todos`, {
+        headers: {
+            "Content-Type": "application/json",
+            'Cache-Control': 'no-cache'
+          },
+      })
         .then(result=>result.json())
         .then(data=>{
           this.$store.dispatch("todos/getTodoList", {todos:data})

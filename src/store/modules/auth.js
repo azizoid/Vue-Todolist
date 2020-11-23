@@ -11,11 +11,12 @@ export default {
   },
   actions: {
     async loginHandler(context) {
-      await fetch("https://quran.az/api/2/225")
+      await fetch(`${process.env.VUE_APP_API_URL}`)
         .then((result) => result.json())
-        .then((data) =>
-          context.commit("auth", { isLoggedIn: true, token: data.out[0].c })
-        )
+        .then((data) => {
+          console.log(data);
+          context.commit("auth", { isLoggedIn: true, token: data.token });
+        })
         .catch((error) => console.log(error));
     },
     logoutHandler(context) {

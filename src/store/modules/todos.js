@@ -24,7 +24,6 @@ export default {
       });
     },
     deleteTodoItem: function(state, payload) {
-      console.log("mutation");
       state.todos = state.todos.filter(
         (todo) => todo._id !== payload.todoItemId
       );
@@ -38,17 +37,10 @@ export default {
       context.commit("showErrorMessage", payload);
     },
     deleteTodoItem: function(context, payload) {
-      if (confirm("are you sure?")) context.commit("deleteTodoItem", payload);
+      context.commit("deleteTodoItem", payload);
     },
     addTodoItem: function(context, payload) {
-      const checkItem = context.getters["todos"].find(
-        (item) => item.title === payload.title
-      );
-      if (!checkItem) context.commit("addTodoItem", payload);
-      else
-        context.dispatch("showErrorMessage", {
-          message: "You already have this item in your list",
-        });
+      context.commit("addTodoItem", payload);
     },
     changeTodoitem: function(context, payload) {
       context.commit("changeTodoitem", payload);
@@ -59,7 +51,14 @@ export default {
       return state.showMessage;
     },
     todos(state) {
-      return state.todos;
+      return state.todos.sort((a, b) => {
+        const titleA = a.title.toUpperCase();
+        const titleB = b.title.toUpperCase();
+
+        if (titleA < titleB) return -1;
+        if (titleA > titleB) return 1;
+        return 0;
+      });
     },
   },
 };
