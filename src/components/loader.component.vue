@@ -2,7 +2,13 @@
   <div class="loader">Loading...</div>
 </template>
 
-<style>
+<script>
+export default {
+  name: "Loader"
+}
+</script>
+
+<style scoped>
 .loader,
 .loader:before,
 .loader:after {

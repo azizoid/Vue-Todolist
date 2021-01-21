@@ -1,9 +1,12 @@
 <template>
   <a 
     class="list-group-item list-group-item-action d-flex justify-content-between align-items-center todo-item" 
-    @click.prevent="onChangeTodo(todo._id, !todo.checked)"
+    @click.prevent="onChangeTodo(todo._id, todo.status)"
   >
-    <span :class="{'checkedTitle': todo.checked}"> {{ todo.title }}</span>
+    <div class="text-center" :class="{checkedTitle: todo.status==='DONE'}"> {{ todo.content }}</div>
+
+    <!-- <small>{{todo._id}}</small> -->
+    
     <button type="button" class="btn btn-outline-danger" @click.stop="onDeleteHandler(todo._id)">
       <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
         <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
@@ -11,7 +14,7 @@
       </svg>
     </button>
     
-    <!-- <small>{{todo._id}}</small> -->
+    
   </a>
 
 </template>
@@ -23,41 +26,18 @@ export default {
     todo: Object,
   },
   methods: {
-    onChangeTodo(todoItemId, newCheckedValue=false){
-      const updateTodoData = {
-          _id: todoItemId,
-          checked: newCheckedValue
-        }
-
-      fetch(`${process.env.VUE_APP_API_URL}/todos/${todoItemId}`, {
-        method:"PUT",
-        headers: {
-          "Content-Type": "application/json",
-          'Cache-Control': 'no-cache'
-        },
-        body: JSON.stringify(updateTodoData)
-      }).then(()=>{
-        this.$store.dispatch(
-          'todos/changeTodoitem', 
-          {todoItemId: todoItemId, checked: newCheckedValue}
-        )
-      })
-      
+    onChangeTodo(todoItemId, currentStatus){
+      this.$store.dispatch("todos/changeTodoitem", {
+        todoItemId: todoItemId,
+        status: currentStatus==="OPEN"?"DONE":"OPEN"
+      });
     },
     onDeleteHandler(todoItemId) {
       if (confirm("Do you really want to delete this task?")) {
-        fetch(`${process.env.VUE_APP_API_URL}/todos/${todoItemId}`, {
-          method:"DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            'Cache-Control': 'no-cache'
-          },
-        }).then(()=>{
-          this.$store.dispatch('todos/deleteTodoItem', {todoItemId: todoItemId})
-        })
+        this.$store.dispatch('todos/deleteTodoItem', {todoItemId: todoItemId})
       }
     },
-  },
+  }
 };
 </script>
 

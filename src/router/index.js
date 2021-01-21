@@ -1,36 +1,42 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Todos from "../views/Todos.vue";
+import store from "../store/index";
+
+import Welcome from "../views/Welcome.vue";
 
 const routes = [
   {
     path: "/",
-    name: "Todo List",
-    component: Todos,
+    name: "Welcome Page",
+    component: Welcome,
   },
   {
-    path: "/login",
-    name: "Login Page",
-    component: () => import("../views/Login.vue"),
+    path: "/todos",
+    name: "Todo List",
+    meta: { requiresAuth: true },
+    component: () => import("../views/Todos.vue"),
   },
-  // {
-  //   path: "/about",
-  //   name: "About",
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () =>
-  //     import(/* webpackChunkName: "about" */ "../views/About.vue"),
-  // },
-  // {
-  //   path: "/todos",
-  //   name: "Todo List",
-  //   component: () => import("../views/Todos.vue"),
-  // },
+  {
+    path: "/auth",
+    name: "Auth Page",
+    meta: { requiresUnAuth: true },
+    component: () => import("../views/Auth.vue"),
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+  linkExactActiveClass: "active",
+});
+
+router.beforeEach((to, _, next) => {
+  if (to.meta.requiresAuth && !store.getters.isAuthenticated) {
+    next("/auth");
+  } else if (to.meta.requiresUnAuth && store.getters.isAuthenticated) {
+    next(to.path);
+  } else {
+    next();
+  }
 });
 
 export default router;

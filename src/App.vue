@@ -1,30 +1,62 @@
 <template>
-  <nav class="navbar navbar-light bg-light">
+  <nav class="navbar navbar-expand navbar-light bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand">reInvent TodoList</a>
-      <LoginComponent v-if="!isLoggedIn" />
-      <LogoutComponent v-else />
+      <a class="navbar-brand">TodoList</a>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <ul class="navbar-nav">
+          <li>
+            <a class="nav-link" aria-current="page" href="/">Home</a>
+          </li>
+          <li v-if="isLoggedIn">
+            <router-link class="nav-link" to="/todos">Todos</router-link>
+          </li>
+          <li v-else>
+            <router-link class="nav-link" to="/auth?redirect=todos">Login</router-link>
+          </li>
+          <li v-if="isLoggedIn">
+            <button class="btn btn-outline-danger" @click="logout">Logout</button>
+          </li>
+        </ul>
+      </div>
     </div>
   </nav>
-  <div id="nav" class="nav justify-content-center">
-    <router-link to="/" class="nav-link">Home</router-link>
-    <router-link to="/login" class="nav-link">Login</router-link>
+  
+  <div class="container">
+    <div class="mt-5 row">
+        <router-view />
+    </div>
   </div>
-  <router-view />
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
- 
-import LoginComponent from "@/components/login.component.vue";
-import LogoutComponent from "@/components/logout.component.vue";
-
 export default {
   name: "App",
-  components: { LoginComponent, LogoutComponent },
+  created(){
+    this.$store.dispatch('tryLogin')
+  },
   computed: {
-    ...mapGetters(['isLoggedIn'])
+    isLoggedIn(){
+      return this.$store.getters.isAuthenticated
+    },
+    didAutoLogout(){
+      return this.$store.getters.didAutoLogout
+    }
+  },
+  methods:{
+    logout(){
+      this.$store.dispatch('logout')
+      this.$router.replace('/auth')
+    }
+  },
+  watch:{
+    didAutoLogout(curValue, oldValue){
+      if(curValue && curValue !== oldValue){
+        this.$router.replace("/")
+      }
+
+    }
   }
+  
 }
 </script>
 
